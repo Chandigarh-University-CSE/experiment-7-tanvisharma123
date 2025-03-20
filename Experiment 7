@@ -1,0 +1,78 @@
+# Remove Stones to min. the totAl
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+class Solution {
+public:
+    int minStoneSum(vector<int>& piles, int k) {
+        priority_queue<int> maxHeap(piles.begin(), piles.end()); // Max heap
+        
+        while (k--) {
+            int maxPile = maxHeap.top();
+            maxHeap.pop();
+            maxPile -= maxPile / 2; // Remove floor(piles[i] / 2)
+            maxHeap.push(maxPile);
+        }
+        
+        int totalStones = 0;
+        while (!maxHeap.empty()) {
+            totalStones += maxHeap.top();
+            maxHeap.pop();
+        }
+        
+        return totalStones;
+    }
+};
+# Min. operations to make the array  increasing 
+ #include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int minOperations(vector<int>& nums) {
+        int operations = 0;//how mny times we need to incremnent
+        
+        for (int i = 1; i < nums.size(); i++)//iterte unitll the lst elemnet  {
+            if (nums[i] <= nums[i - 1]) {
+                int increment = nums[i - 1] - nums[i] + 1;
+                nums[i] += increment;  // Make it strictly greater
+                operations += increment;// to trck totl no. of increment 
+            }
+        }
+        
+        return operations;
+    }
+};
+# Maximum no. of task you can assign 
+include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool canAssign(int mid, vector<int>& tasks, vector<int>& workers, int pills, int strength) {
+        multiset<int> avail(workers.end() - mid, workers.end());
+        for (int i = mid - 1; i >= 0; i--) {
+            auto it = avail.lower_bound(tasks[i]);
+            if (it != avail.end()) avail.erase(it);
+            else if (pills-- && (it = avail.lower_bound(tasks[i] - strength)) != avail.end())
+                avail.erase(it);
+            else return false;
+        }
+        return true;//to sign the tke we hve ti do this 
+    }
+
+    int maxTaskAssign(vector<int>& tasks, vector<int>& workers, int pills, int strength) {
+        sort(tasks.begin(), tasks.end());
+        sort(workers.begin(), workers.end());
+        int left = 0, right = min(tasks.size(), workers.size()), ans = 0;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (canAssign(mid, tasks, workers, pills, strength)) ans = mid, left = mid + 1;
+            else right = mid - 1;
+        }
+        return ans;
+    }
+};
+
